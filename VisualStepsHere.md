@@ -8,6 +8,9 @@
 
 &nbsp;
 
+# SportsDataBackup
+BackupHighlights automates fetching sports highlights, stores data in S3 and DynamoDB, processes videos, and runs on a schedule using ECS Fargate and EventBridge. It uses templated JSON files with environment variable injection for easy configuration and deployment.
+
 # Prerequisites
 Before running the scripts, ensure you have the following:
 
@@ -15,17 +18,39 @@ Before running the scripts, ensure you have the following:
 Rapidapi.com account, will be needed to access highlight images and videos.
 
 For this example we will be using NCAA (USA College Basketball) highlights since it's included for free in the basic plan.
+
 [Sports Highlights API](https://rapidapi.com/highlightly-api-highlightly-api-default/api/sport-highlights-api/playground/apiendpoint_16dd5813-39c6-43f0-aebe-11f891fe5149) is the endpoint we will be using 
 
 ## **2** Verify prerequites are installed 
 
-Docker should be pre-installed in most regions docker --version
+Docker should be pre-installed in most regions 
 
-AWS CloudShell has AWS CLI pre-installed aws --version
+```bash
+docker --version
+```
 
-Python3 should be pre-installed also python3 --version
+![image](https://github.com/user-attachments/assets/5c5afb20-99a3-4b26-a2d1-b08c2a9ca382)
+
+
+AWS CloudShell has AWS CLI pre-installed 
+
+```bash
+aws --version
+```
+
+![image](https://github.com/user-attachments/assets/1b919ca9-616a-4df5-beb5-19ba5549ddea)
+
+
+Python3 should be pre-installed also
+
+```bash
+python3 --version
+```
+
+![image](https://github.com/user-attachments/assets/499dc09f-126c-4485-843d-4a6309c9f68b)
 
 Install gettext package - envsubst is a command-line utility is used for environment variable substituition in shell scripts and text files.
+
 [Install Steps](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext)
 
 ## **3** Retrieve AWS Account ID
@@ -43,9 +68,12 @@ You will not be able to retrieve your secret access key so if you don't have tha
 # START HERE 
 ## **Step 1: Clone The Repo**
 ```bash
-git clone https://github.com/alahl1/SportsDataBackup
+git clone https://github.com/MJaloui/SportsDataBackup
 cd src
 ```
+
+![image](https://github.com/user-attachments/assets/a52abc33-f62f-48c6-8a4d-ec8b995aa9f5)
+
 
 ## **Step 2: Create and Configure the .env File**
 Search & Replace the following values:
@@ -170,3 +198,13 @@ aws ecs run-task \
   --task-definition ${TASK_FAMILY} \
   --network-configuration "awsvpcConfiguration={subnets=[\"${SUBNET_ID}\"],securityGroups=[\"${SECURITY_GROUP_ID}\"],assignPublicIp=\"ENABLED\"}" \
   --region ${AWS_REGION}
+```
+### **What We Learned**
+1. Using templates to generate json files
+2. Integrating DynamoDB to store data backup
+3. Cloudwatcher for logging
+
+### **Future Enhancements**
+1. Integrate exporting a table from DynamoDB to an S3 bucket
+2. Configure an automated backup
+3. Creating batch processing of the entire Json file (importing more than 10 videos)
