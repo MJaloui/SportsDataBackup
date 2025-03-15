@@ -63,7 +63,6 @@ Under Users, click on a user and then "Security Credentials"
 Scroll down until you see the Access Key section
 You will not be able to retrieve your secret access key so if you don't have that somewhere, you need to create an access key.
 
-![BackupHighlights](https://github.com/user-attachments/assets/64014e8b-bcc6-4bf8-ad62-29188c2a0907)
 
 # START HERE 
 ## **Step 1: Clone The Repo**
