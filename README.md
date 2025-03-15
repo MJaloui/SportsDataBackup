@@ -19,7 +19,7 @@ AWS CloudShell has AWS CLI pre-installed aws --version
 Python3 should be pre-installed also python3 --version
 
 Install gettext package - envsubst is a command-line utility is used for environment variable substituition in shell scripts and text files.
-[Install Steps](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext)
+[Install Steps Here](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext)
 
 ## **3** Retrieve AWS Account ID
 
