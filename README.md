@@ -164,7 +164,7 @@ aws ecs run-task \
   --network-configuration "awsvpcConfiguration={subnets=[\"${SUBNET_ID}\"],securityGroups=[\"${SECURITY_GROUP_ID}\"],assignPublicIp=\"ENABLED\"}" \
   --region ${AWS_REGION}
 ```
-### **What We Learned**
+### **Keynotes**
 1. Using templates to generate json files
 2. Integrating DynamoDB to store data backup
 3. Cloudwatcher for logging
