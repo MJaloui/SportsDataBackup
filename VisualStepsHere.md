@@ -190,54 +190,110 @@ envsubst < ecsTarget.template.json > ecsTarget.json
 ```bash
 envsubst < ecseventsrole-policy.template.json > ecseventsrole-policy.json
 ```
-*Optional - Open the gnerated files using cat or a text editor to confirm that all place holders have been correctly replaced
+
+![image](https://github.com/user-attachments/assets/2360fcba-84ed-4097-84ee-a5ca5d323acc)
+
+
+
+*Optional - Open the generated files using cat or a text editor to confirm that all place holders have been correctly replaced
 
 ## **Step 5: Build and Push Docker Image**
+
 1. Create an ECR Repo
+
 ```bash
 aws ecr create-repository --repository-name sports-backup
 ```
+
+![image](https://github.com/user-attachments/assets/99f813ca-df58-4e47-a3a8-a7f8c6ffcabd)
+
+
 2.Log In To ECR
+
 ```bash
 aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 ```
+
+![image](https://github.com/user-attachments/assets/2eb156ca-aeb8-49c1-954f-941a05d0aa9f)
+
 3. Build the Docker Image
+
 ```bash
 docker build -t sports-backup .
 ```
+
+![image](https://github.com/user-attachments/assets/0a47e928-75e6-40aa-a667-abb5109134a7)
+
+
 4.Tag the Image for ECR
+
 ```bash
 docker tag sports-backup:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/sports-backup:latest
 ```
+
+![image](https://github.com/user-attachments/assets/86c6df68-7812-409f-8065-f4a8b1e8703f)
+
+
 5. Push the Image
+
 ```bash
 docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/sports-backup:latest
 ```
+
+![image](https://github.com/user-attachments/assets/9a8393b1-39d8-436f-97fd-84202cbe3f68)
+
+
 ## **Step 6: Create AWS Resources**
+
 1. Register the ECS Task Definition
+
 ```bash
 aws ecs register-task-definition --cli-input-json file://taskdef.json --region ${AWS_REGION}
 ```
+
+![image](https://github.com/user-attachments/assets/be37f540-0efa-4670-aefc-9ba9e23d0407)
+
+
 2. Create the CloudWatch Logs Group
+
 ```bash
 aws logs create-log-group --log-group-name "${AWS_LOGS_GROUP}" --region ${AWS_REGION}
 ```
+
+![image](https://github.com/user-attachments/assets/8357ebe9-004d-4c52-8564-12965a787cab)
+
+
 3. Attach the S3/DynamoDB Policy to the ECS Task Execution Role
+
 ```bash
 aws iam put-role-policy \
   --role-name ecsTaskExecutionRole \
   --policy-name S3DynamoDBAccessPolicy \
   --policy-document file://s3_dynamodb_policy.json
 ```
+
+![image](https://github.com/user-attachments/assets/16b525e6-c555-4719-bed0-5a8222965283)
+
+
 4. Set up the ECS Events Role
 Create the Role with Trust Policy
+
 ```bash
 aws iam create-role --role-name ecsEventsRole --assume-role-policy-document file://ecsEventsRole-trust.json
 ```
-Attach the Events Role Policy
+
+![image](https://github.com/user-attachments/assets/cd9b0c0c-c2ba-46e2-ad7b-558b9b402927)
+
+
+5. Attach the Events Role Policy
+
 ```bash
 aws iam put-role-policy --role-name ecsEventsRole --policy-name ecsEventsPolicy --policy-document file://ecseventsrole-policy.json
 ```
+
+![image](https://github.com/user-attachments/assets/a98bb367-58a8-4174-9fc5-8bac4e1a48b5)
+
+
 
 ## **Step 7: Create an EventBridge Rule to Schedule the Task**
 1. Create the Rule
