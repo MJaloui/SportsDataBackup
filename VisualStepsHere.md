@@ -51,7 +51,17 @@ python3 --version
 
 Install gettext package - envsubst is a command-line utility is used for environment variable substituition in shell scripts and text files.
 
-[Install Steps](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext)
+[Install Steps](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext) 
+
+    - Enter the command below, the "y" to confirm information it's ok.
+
+```bash
+sudo yum install gettext"
+```
+
+![image](https://github.com/user-attachments/assets/1374dd09-ddee-46f7-947c-f8a22d9adb07)
+
+![image](https://github.com/user-attachments/assets/607288f4-ce16-446b-b7cd-e9c135c53659)
 
 ## **3** Retrieve AWS Account ID
 
@@ -75,31 +85,54 @@ cd src
 
 
 ## **Step 2: Create and Configure the .env File**
-Search & Replace the following values:
+Search, then Replace the following values in the .env file:
 
 1. Your-AWS-Account-ID
+  - Use the command below to find AWS ID or click on your username in the top right to view ID.
+
 ```bash
 aws sts get-caller-identity --query "Account" --output text
 ```
+
 2. Your-RAPIDAPI-Key
 3. Your-AWS-Access-Key
 4. Your-AWS-Secret-Access-key
 5. S3_BUCKET_NAME=your-alias
 6. Your-MediaConvert-Endpoint
+
+  - Enter the command below to find mediaconvert endpoint.
+
 ```bash
 aws mediaconvert describe-endpoints
 ```
+
 7. SUBNET_ID=subnet-<Your-SubnetId> 
+
 8. SECURITY_GROUP_ID=sg-<Your-SecurityGroupId>
 
 Steps for SubnetID and Security Group ID:
-1. In the github repo, there is a resources folder and copy the entire contents
-2. In the AWS Cloudshell or vs code terminal, create the file vpc_setup.sh and paste the script inside.
+
+1. In the github repo, there is a resources folder with "vpc_setup.sh" file inside, copy the entire contents.
+
+2. In the AWS Cloudshell or vs code terminal, create the file vpc_setup.sh.
+
+  - Paste the script inside, save the file, and exit.
+
+![image](https://github.com/user-attachments/assets/a0385afc-b300-42ab-9d65-8f3a310c6c88)
+
+![image](https://github.com/user-attachments/assets/b4cf4cbb-2bc0-4b8a-b2ac-50548b89b768)
+
+![image](https://github.com/user-attachments/assets/5f4644d5-1acc-4930-a8fe-c4531f43f1c6)
+
 3. Run the script
+
 ```bash
 bash vpc_setup.sh
 ```
-4. You will see variables in the output, paste these variables into Subnet_ID and Security_Group_ID
+![image](https://github.com/user-attachments/assets/c246acf4-06e3-460f-9435-56810c7d3431)
+
+
+4. You will see variables in the output, paste these variables into Subnet_ID and Security_Group_ID in the ".env" file.
 
 
 ## **Step 3: Load Environment Variables**
@@ -108,25 +141,51 @@ set -a
 source .env
 set +a
 ```
+
+![image](https://github.com/user-attachments/assets/85eb3d85-bf73-4953-8187-af1f7b270bb7)
+
+
 Optional - Verify the variables are loaded
+
 ```bash
 echo $AWS_LOGS_GROUP
 echo $TASK_FAMILY
 echo $AWS_ACCOUNT_ID
 ```
-## **Step 4: Generate Final JSON Files from Templates**
+
+![image](https://github.com/user-attachments/assets/3adedb3f-9b21-4fc7-a717-eb5a2249ee80)
+
+
+
+## **Step 4: Generate Final JSON Files from Templates. If "gettext" is not installed, you will recieve an error**
+
 1. ECS Task Definition
+
 ```bash
 envsubst < taskdef.template.json > taskdef.json
 ```
+
+![image](https://github.com/user-attachments/assets/8bcfb91c-c9e1-4b68-b3f4-f69ad7d24ba0)
+
+
 2. S3/DynamoDB Policy
+
 ```bash
 envsubst < s3_dynamodb_policy.template.json > s3_dynamodb_policy.json
 ```
+
+![image](https://github.com/user-attachments/assets/4f2d83e3-cadf-446d-aba4-73f88ba2fc38)
+
+
 3. ECS Target
+
 ```bash
 envsubst < ecsTarget.template.json > ecsTarget.json
 ```
+
+![image](https://github.com/user-attachments/assets/67382bc8-31bb-4488-b40d-6daf79f83716)
+
+
 4. ECS Events Role Policy
 ```bash
 envsubst < ecseventsrole-policy.template.json > ecseventsrole-policy.json
