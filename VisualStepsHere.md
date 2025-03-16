@@ -300,11 +300,31 @@ aws iam put-role-policy --role-name ecsEventsRole --policy-name ecsEventsPolicy 
 ```bash
 aws events put-rule --name SportsBackupScheduleRule --schedule-expression "rate(1 day)" --region ${AWS_REGION}
 ```
+
+![image](https://github.com/user-attachments/assets/a3ab2e60-569b-4c9d-9299-6142285b9c85)
+
+
 2. Add the Target
+
 ```bash
 aws events put-targets --rule SportsBackupScheduleRule --targets file://ecsTarget.json --region ${AWS_REGION}
 ```
-## **Step 8: Manually Test ECS Task**
+
+![image](https://github.com/user-attachments/assets/65feebbe-cf03-4416-ad4b-cd2bd8fa7256)
+
+
+
+## **Step 8. Create cluster**
+
+```bash
+aws ecs create-cluster --cluster-name sports-backup-cluster --region ${AWS_REGION}
+```
+
+![image](https://github.com/user-attachments/assets/2c93f69b-0f93-4285-be5a-1ae760807f22)
+
+
+## **Step 9: Manually Test ECS Task**
+
 ```bash
 aws ecs run-task \
   --cluster sports-backup-cluster \
@@ -313,6 +333,21 @@ aws ecs run-task \
   --network-configuration "awsvpcConfiguration={subnets=[\"${SUBNET_ID}\"],securityGroups=[\"${SECURITY_GROUP_ID}\"],assignPublicIp=\"ENABLED\"}" \
   --region ${AWS_REGION}
 ```
+
+![image](https://github.com/user-attachments/assets/13c270c0-ab84-4f73-a00c-8758537f06c0)
+
+
+## **Step 10. Verify the cluster*
+
+    - Go to Elastic Container Services > Clusters > Sports-backup-cluster > Task
+
+![image](https://github.com/user-attachments/assets/9a339f37-c874-4e81-9c5a-27604fd938e4)
+
+![image](https://github.com/user-attachments/assets/ff97703d-3e5c-4090-95f4-08b81aee9130)
+  
+![image](https://github.com/user-attachments/assets/1fb4182d-aaf6-4f8c-9471-c9b1c99117ff)
+
+
 ### **What We Learned**
 1. Using templates to generate json files
 2. Integrating DynamoDB to store data backup
